@@ -18,7 +18,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <nav className="flex-1 overflow-y-auto p-3">
           <ul className="space-y-1">
             <li>
-              <NavLink href="/app" icon={<LayoutDashboard className="size-4" />} exact>
+              <NavLink href="/" icon={<LayoutDashboard className="size-4" />} exact>
                 Tableau de bord
               </NavLink>
             </li>
@@ -59,7 +59,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           </Link>
           <nav className="flex items-center gap-2">
             <Link
-              href="/app"
+              href="/"
               className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
               Bureau

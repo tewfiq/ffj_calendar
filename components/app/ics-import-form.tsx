@@ -123,7 +123,7 @@ export function IcsImportForm() {
             {result.conflictsDetected > 0 ? (
               <Button onClick={() => router.push("/app/conflicts")}>Arbitrer les conflits</Button>
             ) : (
-              <Button onClick={() => router.push("/app")}>Retour au tableau de bord</Button>
+              <Button onClick={() => router.push("/")}>Retour au tableau de bord</Button>
             )}
           </div>
         </div>
