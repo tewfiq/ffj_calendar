@@ -14,6 +14,3 @@ next.user-config.*
 node_modules
 .next/
 .DS_Store
-
-# Pre-compiled CSS (regenerated at build time)
-app/globals.css
