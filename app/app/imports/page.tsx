@@ -18,8 +18,8 @@ export default async function ImportsPage() {
     <>
       <PageHeader
         eyebrow="Imports"
-        title="Imports CSV"
-        description="Chaque fichier CSV devient un calendrier autonome, que vous pouvez activer, masquer ou supprimer."
+        title="Imports"
+        description="Chaque import (CSV ou iCal/Google Agenda) devient un calendrier autonome, que vous pouvez activer, masquer ou supprimer."
         actions={
           <Button asChild size="sm">
             <Link href="/app/imports/new">
@@ -42,7 +42,7 @@ export default async function ImportsPage() {
                     <Upload className="mb-2 size-8 text-muted-foreground" />
                     <EmptyTitle>Aucun import pour le moment</EmptyTitle>
                     <EmptyDescription>
-                      Importez votre premier CSV pour commencer à planifier.
+                      Importez un CSV ou connectez un agenda iCal (Google Agenda) pour commencer.
                     </EmptyDescription>
                   </EmptyHeader>
                   <EmptyContent>

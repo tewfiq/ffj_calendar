@@ -5,6 +5,7 @@ import { createServerClient } from "@/lib/supabase/server"
 import type { CsvTargetField } from "@/lib/types"
 import { detectConflicts } from "@/lib/conflict-engine"
 import { getSettings, listEventsBetween } from "@/lib/queries"
+import { parseIcs } from "@/lib/ics"
 
 export interface CommitImportInput {
   filename: string
@@ -191,6 +192,172 @@ export async function rebuildConflicts(): Promise<number> {
   }
 
   return detected.length
+}
+
+export interface CommitIcsImportInput {
+  source: { kind: "url"; url: string } | { kind: "text"; content: string; filename?: string }
+  calendarName: string
+  calendarColor: string
+  // Horizon (years back / forward) used to expand recurring events.
+  yearsBack?: number
+  yearsForward?: number
+}
+
+export interface CommitIcsImportResult {
+  calendarId: string
+  importId: string
+  eventCount: number
+  rawEventCount: number
+  errorCount: number
+  conflictsDetected: number
+  detectedCalendarName: string | null
+}
+
+/** Normalize common Google Calendar / Apple Calendar webcal:// URLs to https://. */
+function normalizeIcsUrl(url: string): string {
+  const trimmed = url.trim()
+  if (trimmed.startsWith("webcal://")) return "https://" + trimmed.slice("webcal://".length)
+  return trimmed
+}
+
+async function fetchIcsFromUrl(url: string): Promise<string> {
+  const normalized = normalizeIcsUrl(url)
+  let parsed: URL
+  try {
+    parsed = new URL(normalized)
+  } catch {
+    throw new Error("URL invalide.")
+  }
+  if (!/^https?:$/.test(parsed.protocol)) {
+    throw new Error("Seules les URLs http(s) sont acceptées.")
+  }
+  const res = await fetch(normalized, {
+    // A few Google endpoints require a UA; a generic one works fine.
+    headers: { "User-Agent": "ConstellationLite/1.0 (+calendar import)" },
+    cache: "no-store",
+    redirect: "follow",
+  })
+  if (!res.ok) {
+    throw new Error(`Téléchargement échoué (HTTP ${res.status}).`)
+  }
+  const text = await res.text()
+  if (!text.includes("BEGIN:VCALENDAR")) {
+    throw new Error("Le contenu téléchargé n'est pas un flux iCalendar valide.")
+  }
+  return text
+}
+
+export async function commitIcsImport(input: CommitIcsImportInput): Promise<CommitIcsImportResult> {
+  const sb = createServerClient()
+
+  // 1. Resolve source into text.
+  let icsText: string
+  let originLabel: string
+  if (input.source.kind === "url") {
+    icsText = await fetchIcsFromUrl(input.source.url)
+    originLabel = input.source.url
+  } else {
+    icsText = input.source.content
+    originLabel = input.source.filename ?? "import.ics"
+  }
+
+  // 2. Parse.
+  const now = new Date()
+  const yearsBack = input.yearsBack ?? 1
+  const yearsForward = input.yearsForward ?? 1
+  const windowStart = new Date(now.getFullYear() - yearsBack, 0, 1)
+  const windowEnd = new Date(now.getFullYear() + yearsForward, 11, 31, 23, 59, 59)
+  const parsed = parseIcs(icsText, { windowStart, windowEnd })
+
+  // 3. Create calendar.
+  const finalName =
+    input.calendarName.trim() ||
+    parsed.calendarName ||
+    (input.source.kind === "text" ? originLabel.replace(/\.ics$/i, "") : "Agenda iCal")
+  const { data: cal, error: calErr } = await sb
+    .from("calendars")
+    .insert({
+      name: finalName,
+      source_type: "csv_import", // schema check constraint limits values; reuse csv_import to stay compatible.
+      color: input.calendarColor,
+      is_system: false,
+      is_enabled: true,
+      metadata: {
+        origin: "ics",
+        source: input.source.kind === "url" ? originLabel : "file",
+        detected_name: parsed.calendarName,
+      },
+    })
+    .select()
+    .single()
+  if (calErr || !cal) throw calErr ?? new Error("Failed to create calendar")
+
+  // 4. Create import row.
+  const { data: imp, error: impErr } = await sb
+    .from("imports")
+    .insert({
+      calendar_id: cal.id,
+      filename: input.source.kind === "url" ? originLabel : originLabel,
+      status: "pending",
+      column_mapping: { source: "ics", origin: originLabel },
+      row_count: parsed.rawEventCount,
+      started_at: new Date().toISOString(),
+    })
+    .select()
+    .single()
+  if (impErr || !imp) throw impErr ?? new Error("Failed to create import")
+
+  // 5. Insert events.
+  const events = parsed.events.map((e) => ({
+    calendar_id: cal.id,
+    source_event_id: e.uid,
+    title: e.summary,
+    description: e.description,
+    location: e.location,
+    start_at: e.start_at,
+    end_at: e.end_at,
+    all_day: e.all_day,
+    timezone: e.timezone ?? "Europe/Paris",
+    priority: "medium" as const,
+    movable: "movable" as const,
+    category: null,
+    is_system: false,
+  }))
+
+  if (events.length > 0) {
+    for (let i = 0; i < events.length; i += 500) {
+      const chunk = events.slice(i, i + 500)
+      const { error: evErr } = await sb.from("events").insert(chunk)
+      if (evErr) throw evErr
+    }
+  }
+
+  await sb
+    .from("imports")
+    .update({
+      status: events.length > 0 ? "committed" : "failed",
+      row_count: parsed.rawEventCount,
+      error_count: parsed.errorCount,
+      completed_at: new Date().toISOString(),
+    })
+    .eq("id", imp.id)
+
+  const conflictsDetected = await rebuildConflicts()
+
+  revalidatePath("/app")
+  revalidatePath("/app/calendar")
+  revalidatePath("/app/conflicts")
+  revalidatePath("/app/imports")
+
+  return {
+    calendarId: cal.id,
+    importId: imp.id,
+    eventCount: events.length,
+    rawEventCount: parsed.rawEventCount,
+    errorCount: parsed.errorCount,
+    conflictsDetected,
+    detectedCalendarName: parsed.calendarName,
+  }
 }
 
 function toISOSafe(raw: string): string | null {

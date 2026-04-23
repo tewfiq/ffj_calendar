@@ -1,16 +1,16 @@
 import { PageHeader } from "@/components/app/page-header"
-import { ImportWizard } from "@/components/app/import-wizard"
+import { ImportSourcePicker } from "@/components/app/import-source-picker"
 
 export default function NewImportPage() {
   return (
     <>
       <PageHeader
         eyebrow="Nouvel import"
-        title="Importer un fichier CSV"
-        description="Déposez un fichier, ajustez la correspondance des colonnes, prévisualisez, puis confirmez. L'import crée un nouveau calendrier."
+        title="Importer un agenda"
+        description="Depuis un fichier CSV ou un flux iCalendar (Google Agenda, Apple, Outlook). Chaque import devient un calendrier distinct."
       />
       <section className="px-6 py-6 md:px-8 md:py-8">
-        <ImportWizard />
+        <ImportSourcePicker />
       </section>
     </>
   )
