@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { listCalendars, listEventsBetween, listOpenConflicts } from "@/lib/queries"
 import { FRENCH_MONTHS, FRENCH_WEEKDAYS_SHORT, eventTouchesDay, isSameDay, monthGrid, toISODate } from "@/lib/dates"
 import type { Event } from "@/lib/types"
-import { CalendarLegend } from "@/components/calendar-legend"
+import { CalendarLegend } from "@/components/app/calendar-legend"
 
 export const dynamic = "force-dynamic"
 
