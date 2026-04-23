@@ -16,4 +16,4 @@ node_modules
 .DS_Store
 
 # Pre-compiled CSS (regenerated at build time)
-app/globals.cssapp/globals.css
+app/globals.css
