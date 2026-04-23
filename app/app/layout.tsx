@@ -23,22 +23,22 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               </NavLink>
             </li>
             <li>
-              <NavLink href="/app/calendar" icon={<CalendarRange className="size-4" />}>
+              <NavLink href="/calendar" icon={<CalendarRange className="size-4" />}>
                 Calendrier
               </NavLink>
             </li>
             <li>
-              <NavLink href="/app/conflicts" icon={<GitMerge className="size-4" />}>
+              <NavLink href="/conflicts" icon={<GitMerge className="size-4" />}>
                 Conflits
               </NavLink>
             </li>
             <li>
-              <NavLink href="/app/imports" icon={<Upload className="size-4" />}>
+              <NavLink href="/imports" icon={<Upload className="size-4" />}>
                 Imports
               </NavLink>
             </li>
             <li>
-              <NavLink href="/app/settings" icon={<Settings className="size-4" />}>
+              <NavLink href="/settings" icon={<Settings className="size-4" />}>
                 Réglages
               </NavLink>
             </li>
@@ -65,19 +65,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               Bureau
             </Link>
             <Link
-              href="/app/calendar"
+              href="/calendar"
               className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
               Agenda
             </Link>
             <Link
-              href="/app/conflicts"
+              href="/conflicts"
               className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
               Conflits
             </Link>
             <Link
-              href="/app/imports"
+              href="/imports"
               className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
               Imports

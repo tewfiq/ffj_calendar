@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { listCalendars, listEventsBetween, listOpenConflicts } from "@/lib/queries"
 import { FRENCH_MONTHS, FRENCH_WEEKDAYS_SHORT, eventTouchesDay, isSameDay, monthGrid, toISODate } from "@/lib/dates"
 import type { Event } from "@/lib/types"
-import { CalendarLegend } from "@/components/app/calendar-legend"
+import { CalendarLegend } from "@/components/calendar-legend"
 
 export const dynamic = "force-dynamic"
 
@@ -50,20 +50,20 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         actions={
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="icon" aria-label="Mois précédent">
-              <Link href={`/app/calendar?y=${prev.y}&m=${prev.m}`}>
+              <Link href={`/calendar?y=${prev.y}&m=${prev.m}`}>
                 <ChevronLeft className="size-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <Link href={`/app/calendar?y=${today.getFullYear()}&m=${today.getMonth()}`}>Aujourd&apos;hui</Link>
+              <Link href={`/calendar?y=${today.getFullYear()}&m=${today.getMonth()}`}>Aujourd&apos;hui</Link>
             </Button>
             <Button asChild variant="outline" size="icon" aria-label="Mois suivant">
-              <Link href={`/app/calendar?y=${next.y}&m=${next.m}`}>
+              <Link href={`/calendar?y=${next.y}&m=${next.m}`}>
                 <ChevronRight className="size-4" />
               </Link>
             </Button>
             <Button asChild size="sm" className="ml-2">
-              <Link href="/app/imports/new">
+              <Link href="/imports/new">
                 <Upload className="mr-1 size-4" />
                 Importer
               </Link>

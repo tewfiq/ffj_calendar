@@ -34,7 +34,7 @@ export default async function DashboardPage() {
         description="Voici un aperçu de vos sept prochains jours. Tout ce qui compte tient ici."
         actions={
           <Button asChild size="sm">
-            <Link href="/app/imports/new">
+            <Link href="/imports/new">
               <Upload className="mr-1 size-4" />
               Importer un CSV
             </Link>
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
                 <p className="mt-1 text-sm text-muted-foreground">Vos 7 prochains jours, tous agendas confondus.</p>
               </div>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/app/calendar">
+                <Link href="/calendar">
                   Agenda complet
                   <ArrowRight className="ml-1 size-4" />
                 </Link>
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
                   </EmptyHeader>
                   <EmptyContent>
                     <Button asChild size="sm">
-                      <Link href="/app/imports/new">Importer un CSV</Link>
+                      <Link href="/imports/new">Importer un CSV</Link>
                     </Button>
                   </EmptyContent>
                 </Empty>
@@ -133,7 +133,7 @@ export default async function DashboardPage() {
                 <p className="mt-1 text-sm text-muted-foreground">Un CSV = un calendrier.</p>
               </div>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/app/imports">
+                <Link href="/imports">
                   Gérer
                   <ArrowRight className="ml-1 size-4" />
                 </Link>
@@ -185,7 +185,7 @@ export default async function DashboardPage() {
               </div>
             </div>
             <Button asChild variant="outline" size="sm">
-              <Link href="/app/conflicts">Voir les conflits</Link>
+              <Link href="/conflicts">Voir les conflits</Link>
             </Button>
           </div>
         )}

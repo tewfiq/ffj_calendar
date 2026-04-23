@@ -60,7 +60,7 @@ export default function LandingPage() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/app/calendar">Voir la démo</Link>
+                <Link href="/calendar">Voir la démo</Link>
               </Button>
             </div>
             <p className="mt-6 font-mono text-xs text-muted-foreground">

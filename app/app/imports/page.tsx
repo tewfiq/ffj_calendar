@@ -22,7 +22,7 @@ export default async function ImportsPage() {
         description="Chaque import (CSV ou iCal/Google Agenda) devient un calendrier autonome, que vous pouvez activer, masquer ou supprimer."
         actions={
           <Button asChild size="sm">
-            <Link href="/app/imports/new">
+            <Link href="/imports/new">
               <Upload className="mr-1 size-4" />
               Nouvel import
             </Link>
@@ -47,7 +47,7 @@ export default async function ImportsPage() {
                   </EmptyHeader>
                   <EmptyContent>
                     <Button asChild size="sm">
-                      <Link href="/app/imports/new">Commencer</Link>
+                      <Link href="/imports/new">Commencer</Link>
                     </Button>
                   </EmptyContent>
                 </Empty>

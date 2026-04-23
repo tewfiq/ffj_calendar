@@ -123,11 +123,11 @@ export function ImportWizard() {
             />
           </dl>
           <div className="mt-6 flex justify-center gap-2">
-            <Button variant="outline" onClick={() => router.push("/app/calendar")}>
+            <Button variant="outline" onClick={() => router.push("/calendar")}>
               Voir l&apos;agenda
             </Button>
             {result.conflictsDetected > 0 ? (
-              <Button onClick={() => router.push("/app/conflicts")}>Arbitrer les conflits</Button>
+              <Button onClick={() => router.push("/conflicts")}>Arbitrer les conflits</Button>
             ) : (
               <Button onClick={() => router.push("/")}>Retour au tableau de bord</Button>
             )}
