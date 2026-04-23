@@ -23,10 +23,10 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-2">
             <Button asChild size="sm" variant="ghost" className="hidden sm:inline-flex">
-              <Link href="/">Ouvrir l&apos;application</Link>
+              <Link href="/dashboard">Ouvrir l&apos;application</Link>
             </Button>
             <Button asChild size="sm">
-              <Link href="/">
+              <Link href="/dashboard">
                 Commencer
                 <ArrowRight className="ml-1 size-4" />
               </Link>
@@ -54,13 +54,13 @@ export default function LandingPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
-                <Link href="/">
+                <Link href="/dashboard">
                   Importer mon premier CSV
                   <ArrowRight className="ml-1.5 size-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/calendar">Voir la démo</Link>
+                <Link href="/dashboard/calendar">Voir la démo</Link>
               </Button>
             </div>
             <p className="mt-6 font-mono text-xs text-muted-foreground">
@@ -232,7 +232,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-8">
             <Button asChild size="lg">
-              <Link href="/">
+              <Link href="/dashboard">
                 Ouvrir Constellation Lite
                 <ArrowRight className="ml-1.5 size-4" />
               </Link>
